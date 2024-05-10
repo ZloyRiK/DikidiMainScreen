@@ -1,42 +1,31 @@
 package com.example.dikidimainscreen.presentation
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.dikidimainscreen.data.ApiFactory
-import com.example.dikidimainscreen.navigation.BottomNavigationItem
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import androidx.lifecycle.viewModelScope
+import com.example.dikidimainscreen.data.api.ApiFactory
+import com.example.dikidimainscreen.data.mapper.DikidiServerResponseMapper
+import com.example.dikidimainscreen.domain.model.PremiumData
+import kotlinx.coroutines.launch
+import okhttp3.internal.wait
 
-class MainScreenViewModel: ViewModel() {
+class MainScreenViewModel : ViewModel() {
 
-    private val _selectedNavItem = MutableLiveData<BottomNavigationItem>(BottomNavigationItem.Home)
-    val selectedNavItem: LiveData<BottomNavigationItem> = _selectedNavItem
+    private val mapper = DikidiServerResponseMapper()
 
-    private val compositeDisposable = CompositeDisposable()
+    private val _premiumBlockState = MutableLiveData<PremiumBlockState>(PremiumBlockState.Initial)
+    val premiumBlockState: LiveData<PremiumBlockState> = _premiumBlockState
 
-    fun selectNavItem(navigationItem: BottomNavigationItem){
-        _selectedNavItem.value = navigationItem
+    init {
+        loadData()
     }
+
     fun loadData() {
-        val disposable = ApiFactory.apiService.getExampleData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.d("MyLog", "Before use DikidiServerResponse")
-                Log.d("MyLog", "Error cod from response ${it.serverError.code}")
-            }, {
-                Log.d("MyLog", "Without use DikidiServerResponse")
-                Log.d("MyLog", "trow massage ${it.message}")
-            })
-
-        compositeDisposable.add(disposable)
+        viewModelScope.launch {
+            val response = ApiFactory.apiService.getExampleDataByCity("city_id=468902")
+            _premiumBlockState.value = PremiumBlockState.BlockData(mapper.responseToPremiumList(response))
+        }
     }
 
-    override fun onCleared() {
-        compositeDisposable.dispose()
-        super.onCleared()
-    }
 }

@@ -21,6 +21,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.dikidimainscreen.navigation.AppNavGraph
@@ -31,7 +32,8 @@ import com.example.dikidimainscreen.navigation.rememberNavState
 //@Preview
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MainScreenViewModel) {
+fun MainScreen() {
+
     val navigationState = rememberNavState()
 
 
@@ -81,7 +83,7 @@ fun MainScreen(viewModel: MainScreenViewModel) {
     ) {
         AppNavGraph(
             navController = navigationState.navHostController,
-            homeScreenContent = { HomeScreen(viewModel = viewModel, paddingValues = it) },
+            homeScreenContent = { HomeScreen( paddingValues = it) },
             catalogScreenContent = {
                 Column(
                     modifier = Modifier.fillMaxSize(),

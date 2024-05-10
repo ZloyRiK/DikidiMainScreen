@@ -25,21 +25,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProvider(this).get(MainScreenViewModel::class.java)
-        viewModel.loadData()
-
-
         enableEdgeToEdge()
         setContent {
             DikidiMainScreenTheme {
-                MainScreen(viewModel)
+                MainScreen()
             }
         }
-    }
-
-    @Preview
-    @Composable
-    fun Test(){
-        BlockPremium()
     }
 }
