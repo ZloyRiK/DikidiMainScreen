@@ -1,4 +1,4 @@
-package com.example.dikidimainscreen.domain.model
+package com.example.dikidimainscreen.data.model
 
 
 import com.google.gson.annotations.SerializedName

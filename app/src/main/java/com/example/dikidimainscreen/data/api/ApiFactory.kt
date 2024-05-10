@@ -1,4 +1,4 @@
-package com.example.dikidimainscreen.data
+package com.example.dikidimainscreen.data.api
 
 import com.example.dikidimainscreen.BASE_URL
 import com.example.dikidimainscreen.TOKEN
