@@ -1,4 +1,4 @@
-package com.example.dikidimainscreen.domain.model
+package com.example.dikidimainscreen.data.model
 
 
 import com.google.gson.annotations.SerializedName
@@ -10,6 +10,4 @@ data class Blocks(
     val examples: String,
     @SerializedName("examples2")
     val examples2: String,
-    @SerializedName("shares")
-    val shares: Shares
 )
