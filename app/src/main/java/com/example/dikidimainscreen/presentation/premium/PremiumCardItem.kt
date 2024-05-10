@@ -17,10 +17,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.example.dikidimainscreen.R
+import com.example.dikidimainscreen.domain.model.PremiumData
 
 @Composable
-fun PremiumCardItem(title: String, description: String) {
+fun PremiumCardItem(premiumData: PremiumData) {
     Card(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(0.dp)) {
         Row(
             modifier = Modifier
@@ -28,8 +30,8 @@ fun PremiumCardItem(title: String, description: String) {
                 .padding(15.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.post_comunity_thumbnail),
+            AsyncImage(
+                model = premiumData.imageUrl,
                 contentDescription = null,
                 modifier = Modifier
                     .size(50.dp)
@@ -38,8 +40,8 @@ fun PremiumCardItem(title: String, description: String) {
             Column(modifier = Modifier
                 .weight(1f)
                 .padding(start = 15.dp)) {
-                Text(text = title, maxLines = 2)
-                Text(text = description, maxLines = 2)
+                Text(text = premiumData.title, maxLines = 2)
+                Text(text = "Example description", maxLines = 2)
             }
             OutlinedButton(onClick = { /*TODO*/ }, shape = RoundedCornerShape(8.dp)) {
                 Text(text = stringResource(R.string.appointment))

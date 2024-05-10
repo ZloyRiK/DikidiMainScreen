@@ -1,4 +1,4 @@
-package com.example.dikidimainscreen.domain.testdata
+package com.example.dikidimainscreen.domain.model
 
 data class PromoData(
     val imageId: Int,

@@ -16,10 +16,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.dikidimainscreen.domain.model.PremiumData
 
 
 @Composable
-fun BlockPremium() {
+fun BlockPremium(listPremiumData: List<PremiumData>) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -29,8 +30,8 @@ fun BlockPremium() {
                 .fillMaxSize()
                 .clip(RoundedCornerShape(8.dp))
         ) {
-            for (i in 1..20) {
-                PremiumCardItem(title = "Title: $i", description = "Just description")
+            listPremiumData.forEach {
+                PremiumCardItem(it)
             }
         }
     }

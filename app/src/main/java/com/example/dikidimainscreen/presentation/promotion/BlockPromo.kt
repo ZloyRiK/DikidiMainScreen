@@ -4,7 +4,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import com.example.dikidimainscreen.R
-import com.example.dikidimainscreen.domain.testdata.PromoData
+import com.example.dikidimainscreen.domain.model.PromoData
 
 @Composable
 fun BlockPromo(){
