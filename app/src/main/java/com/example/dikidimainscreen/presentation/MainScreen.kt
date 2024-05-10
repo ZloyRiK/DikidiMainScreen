@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +21,11 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.example.dikidimainscreen.navigation.AppNavGraph
 import com.example.dikidimainscreen.navigation.BottomNavigationItem
+import com.example.dikidimainscreen.navigation.Screen
 import com.example.dikidimainscreen.navigation.rememberNavState
 
 //@Preview
@@ -28,7 +33,6 @@ import com.example.dikidimainscreen.navigation.rememberNavState
 @Composable
 fun MainScreen(viewModel: MainScreenViewModel) {
     val navigationState = rememberNavState()
-    val selectedNavItem = viewModel.selectedNavItem.observeAsState(BottomNavigationItem.Home)
 
 
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
@@ -53,6 +57,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             )
         },
         bottomBar = {
+            val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
             NavigationBar {
                 val items = listOf(
                     BottomNavigationItem.Home,
@@ -64,8 +70,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 Row(horizontalArrangement = Arrangement.Center) {
                     items.forEach {
                         NavigationRailItem(
-                            selected = selectedNavItem == it,
-                            onClick = { viewModel.selectNavItem(it) },
+                            selected = currentRoute == it.screen.route,
+                            onClick = { navigationState.navigateTo(it.screen.route) },
                             icon = { Icon(it.icon, contentDescription = it.label) },
                             label = { Text(text = it.label) })
                     }
@@ -73,13 +79,10 @@ fun MainScreen(viewModel: MainScreenViewModel) {
             }
         }
     ) {
-        when (selectedNavItem.value) {
-
-            BottomNavigationItem.Home -> {
-                HomeScreen(viewModel = viewModel, paddingValues = it)
-            }
-
-            BottomNavigationItem.Catalog -> {
+        AppNavGraph(
+            navController = navigationState.navHostController,
+            homeScreenContent = { HomeScreen(viewModel = viewModel, paddingValues = it) },
+            catalogScreenContent = {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -87,10 +90,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 ) {
                     Text(text = "Catalog page")
                 }
-
-            }
-
-            BottomNavigationItem.Promo -> {
+            },
+            promoScreenContent = {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -98,10 +99,8 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 ) {
                     Text(text = "Promo page")
                 }
-
-            }
-
-            BottomNavigationItem.Profile -> {
+            },
+            profileScreenContent = {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
@@ -109,46 +108,16 @@ fun MainScreen(viewModel: MainScreenViewModel) {
                 ) {
                     Text(text = "Profile page")
                 }
-
-            }
-
-            BottomNavigationItem.Menu -> {
+            },
+            menuScreenContent = {
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                Text(text = "Menu page")
+                    Text(text = "Menu page")
                 }
-            }
-        }
-    }
+            })
 
-//    Scaffold(
-//        bottomBar = {
-//            NavigationBar {
-//                val navBackStackEntry = navigationState.navHostController.currentBackStackEntryAsState()
-//                val currentRoute = navBackStackEntry.value?.destination?.route
-//                val items =
-//                    listOf(NavigationItem.Home, NavigationItem.Favorite, NavigationItem.Profile)
-//                items.forEach { item ->
-//                    NavigationBarItem(
-//                        icon = { Icon(item.imageVector, contentDescription = null) },
-//                        label = { Text(text = stringResource(id = item.titleResId)) },
-//                        selected = currentRoute == item.screen.route,
-//                        onClick = {
-//                            navigationState.navigateTo(item.screen.route)
-//                        }
-//                    )
-//                }
-//            }
-//        },
-//    ) {
-//
-//        AppNavGraph(
-//            navController = navigationState.navHostController,
-//            homeScreenContent = { HomeScreen(paddingValues = it, onCommentClickListener = {}) },
-//            favoriteScreenContent = { TextCounter(name = "Favorite Screen") },
-//            profileScreenContent = { TextCounter(name = "Profile Screen") })
-//    }
+    }
 }
